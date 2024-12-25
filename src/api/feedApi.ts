@@ -60,3 +60,18 @@ export const editFeed = async ({
     .eq("userId", userId);
   if (error) throw error;
 };
+
+export const deleteFeed = async ({
+  userId,
+  feedId,
+}: {
+  userId: string;
+  feedId: string;
+}) => {
+  const { error } = await supabase
+    .from("feeds")
+    .delete()
+    .eq("id", feedId)
+    .eq("userId", userId);
+  if (error) throw error;
+};
