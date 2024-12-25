@@ -20,3 +20,21 @@ export const fetchFeedById = async (id: string | undefined): Promise<Feed> => {
   if (error) throw error;
   return data[0];
 };
+
+export const createFeed = async ({
+  title,
+  content,
+  userId,
+}: {
+  title: string;
+  content: string;
+  userId: string;
+}) => {
+  const { data, error } = await supabase.from("feeds").insert({
+    title,
+    content,
+    userId: userId,
+  });
+  if (error) throw error;
+  return data;
+};
