@@ -9,7 +9,7 @@ export default function Layout() {
 	}
 	return (
 		<>
-			<header className="flex justify-between items-center p-4 border-b border-gray-200 bg-white">
+			<header className="flex justify-between items-center p-4 border-b border-gray-200 bg-white mb-10">
 				<div>
 					<Link to="/">
 						<img src="/logo.svg" alt="logo" />
@@ -37,7 +37,9 @@ export default function Layout() {
 					)
 				}
 			</header>
-			<Outlet />
+			<div className="max-w-screen-lg mx-auto min-h-[calc(100vh-100px)] px-10">
+				<Outlet />
+			</div>
 		</>
 	);
 }
