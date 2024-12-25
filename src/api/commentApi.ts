@@ -24,7 +24,57 @@ export const fetchCommentsWithUserByFeedId = async (
         )
       `
     )
-    .eq("feed_id", feedId);
+    .eq("feed_id", feedId)
+    .order("created_at", { ascending: true });
   if (error) throw error;
   return data;
+};
+
+export const addComment = async ({
+  feedId,
+  userId,
+  content,
+}: {
+  feedId: string;
+  userId: string;
+  content: string;
+}) => {
+  const { error } = await supabase.from("comments").insert({
+    feed_id: feedId,
+    user_id: userId,
+    content: content,
+  });
+  if (error) throw error;
+};
+
+export const deleteComment = async ({
+  commentId,
+  userId,
+}: {
+  commentId: string;
+  userId: string;
+}) => {
+  const { error } = await supabase
+    .from("comments")
+    .delete()
+    .eq("id", commentId)
+    .eq("user_id", userId);
+  if (error) throw error;
+};
+
+export const editComment = async ({
+  commentId,
+  userId,
+  content,
+}: {
+  commentId: string;
+  userId: string;
+  content: string;
+}) => {
+  const { error } = await supabase
+    .from("comments")
+    .update({ content })
+    .eq("id", commentId)
+    .eq("user_id", userId);
+  if (error) throw error;
 };
