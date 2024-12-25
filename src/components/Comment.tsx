@@ -1,16 +1,34 @@
 import { IoPersonCircleOutline } from "react-icons/io5";
 
-export default function Comment() {
+type User = {
+	id: string;
+	email: string;
+	nickname: string;
+}
+
+type Comment = {
+	id: string;
+	content: string;
+	created_at: string;
+	user: User
+}
+
+interface CommentProps {
+	comment: Comment;
+}
+
+export default function Comment({ comment }: CommentProps) {
 	return (
 		<>
 			<div className="flex gap-2.5">
 				<IoPersonCircleOutline className="w-16 h-16 rounded-full pr-6" />
 				<div className="flex flex-1 flex-col gap-3">
 					<div className="flex flex-col gap-1">
-						<div className="text-slate-900 font-bold text-sm">닉네임</div>
-						<div className="text-gray-500">이메일</div>
+						<div className="text-slate-900 font-bold text-sm">
+							{comment.user.nickname ? comment.user.nickname : comment.user.email}
+						</div>
 					</div>
-					<div className="text-gray-500">댓글 내용</div>
+					<div className="text-gray-500">{comment.content}</div>
 				</div>
 				<div className="flex items-end gap-3">
 					<button
