@@ -24,8 +24,10 @@ export default function Feed() {
 			</div >
 
 			<div className="flex items-center gap-1 p-3 text-gray-600">
-				<FaCommentDots className="font-bold text-xl" />
-				<div className="font-bold">12</div>
+				<FaCommentDots className="text-gray-500 font-bold text-xl" />
+				<div className="text-blue-950 font-bold text-sm">
+					12
+				</div>
 			</div>
 		</Link>
 	)
