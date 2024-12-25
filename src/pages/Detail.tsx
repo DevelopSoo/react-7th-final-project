@@ -25,7 +25,14 @@ export default function Detail() {
 
 	// TODO: 낙관적 업데이트 적용
 	const upvoteMutation = useMutation({
-		mutationFn: toggleUpvote,
+		mutationFn: (data: { feedId: string | undefined; userId: string; isUpvoted: boolean }) => {
+			if (!data.feedId) throw new Error("feedId가 없습니다");
+			return toggleUpvote({
+				feedId: data.feedId,
+				userId: data.userId,
+				isUpvoted: data.isUpvoted,
+			})
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["feeds", id, "upvotes"] });
 		},
@@ -72,7 +79,7 @@ export default function Detail() {
 							}
 
 							if (isUpvotedByMe !== undefined) {
-								upvoteMutation.mutate({ feedId: id, userId: user?.id, isUpvoted: isUpvotedByMe })
+								upvoteMutation.mutate({ feedId: id, userId: user.id, isUpvoted: isUpvotedByMe })
 							}
 						}}
 						className="p-3 bg-gray-100 rounded-lg text-sm flex flex-col items-center gap-1 text-blue-950">
@@ -101,9 +108,9 @@ export default function Detail() {
 
 			<div className="flex flex-col gap-8 bg-white p-6 rounded-lg">
 				<h3 className="text-blue-950 font-semibold">{comments?.length} Comments</h3>
-				{comments?.map((comment) => <Comment key={comment.id} comment={comment} />)}
+				{comments?.map((comment) => <Comment key={comment.id} feedId={id} comment={comment} />)}
 			</div>
-			<CommentForm />
+			<CommentForm feedId={id} />
 		</div>
 	)
 }
