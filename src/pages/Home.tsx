@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
 import Feed from "../components/Feed";
+import { useQuery } from "@tanstack/react-query";
+import { fetchFeeds } from "../api/feedApi";
+
 
 export default function Home() {
+	const { data, isLoading, error } = useQuery({
+		queryKey: ["feeds"],
+		queryFn: fetchFeeds,
+	});
+
 	return (
 		<>
 			<div className="flex justify-between items-center mb-4">
@@ -11,11 +19,9 @@ export default function Home() {
 				</Link>
 			</div>
 			<div className="flex flex-col gap-4">
-				<Feed />
-				<Feed />
-				<Feed />
-				<Feed />
-				<Feed />
+				{isLoading && <div>Loading...</div>}
+				{error && <div>Error: {error.message}</div>}
+				{data && data.map((feed) => <Feed key={feed.id} feed={feed} />)}
 			</div >
 		</>
 	);
