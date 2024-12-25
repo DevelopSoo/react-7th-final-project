@@ -37,7 +37,7 @@ export default function Layout() {
 					)
 				}
 			</header>
-			<div className="max-w-screen-lg mx-auto min-h-[calc(100vh-100px)] px-10">
+			<div className="max-w-screen-lg mx-auto min-h-[calc(100vh-100px)] px-10 mb-10">
 				<Outlet />
 			</div>
 		</>
