@@ -15,9 +15,9 @@ export default function Detail() {
 					<Link to={`/feeds/update/1`} className="bg-yellow-500 text-white px-4 py-2 rounded-md">
 						수정
 					</Link>
-					<Link to={`/feeds/delete/1`} className="bg-red-500 text-white px-4 py-2 rounded-md">
+					<button className="bg-red-500 text-white px-4 py-2 rounded-md">
 						삭제
-					</Link>
+					</button>
 				</div>
 			</div>
 			<div className="bg-white p-6 flex justify-between rounded-lg">
