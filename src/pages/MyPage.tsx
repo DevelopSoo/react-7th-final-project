@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
+import supabase from "../utils/supabase";
 
 export default function MyPage() {
-	const { user } = useAuthStore();
+	const { user, setUser } = useAuthStore();
 	const [nickname, setNickname] = useState("");
+	const [profileFile, setProfileFile] = useState<File | null>(null);
 	const [profileImage, setProfileImage] = useState("");
+	const [isUploading, setIsUploading] = useState(false);
 
 	useEffect(() => {
 		if (user) {
@@ -20,14 +23,71 @@ export default function MyPage() {
 	const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
+			setProfileFile(file);
 			setProfileImage(URL.createObjectURL(file));
 		}
 	};
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	// 1. profileFile이 있는 경우 스토리지에 업로드 
+	// 2. 업로드 후 
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		setIsUploading(true);
 		e.preventDefault();
-		if (!user) return;
-		console.log({ nickname, profileImage });
+		if (!user) {
+			return alert("로그인 후 이용해주세요.");
+		}
+
+		// 기본 업데이트 데이터
+		const updateData = {
+			nickname: nickname,
+			img_url: "" // 기본값으로 빈 문자열 설정
+		};
+
+		try {
+			if (profileFile) {
+				// 파일 확장자 추출
+				const fileExt = profileFile.name.split('.').pop();
+				// 사용자 ID와 확장자를 조합하여 고유한 경로 생성
+				const timestamp = new Date().getTime();
+				const filePath = `${user.id}/profile.${timestamp}.${fileExt}`;
+				const { error } = await supabase.storage
+					.from('profiles')
+					.upload(filePath, profileFile, {
+						cacheControl: '3600',
+						upsert: true,
+					});
+
+				if (error) {
+					throw new Error(error.message);
+				}
+				const { data: { publicUrl } } = supabase.storage
+					.from('profiles')
+					.getPublicUrl(filePath);
+
+				updateData.img_url = publicUrl;
+			}
+
+
+			const { data, error } = await supabase.from("users").update(updateData).eq("id", user.id).select()
+			await supabase.auth.updateUser({
+				data: updateData
+			})
+
+			if (error) {
+				throw new Error(error.message);
+			}
+
+			setNickname(data[0].nickname);
+			setProfileImage(data[0].img_url);
+			setUser({ ...user, nickname: data[0].nickname, img_url: data[0].img_url });
+		} catch (error: unknown) {
+			if (error instanceof Error || 'message' in (error as object)) {
+				return alert(`사용자 정보 업데이트에 실패했습니다. ${(error as { message: string }).message}`);
+			}
+			return alert('알 수 없는 에러가 발생했습니다.');
+		} finally {
+			setIsUploading(false);
+		}
 	};
 
 	return (
@@ -94,9 +154,10 @@ export default function MyPage() {
 					<div className="flex justify-end">
 						<button
 							type="submit"
-							className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+							disabled={isUploading}
+							className={`px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
 						>
-							저장하기
+							{isUploading ? "업로드 중..." : "저장하기"}
 						</button>
 					</div>
 				</form>
