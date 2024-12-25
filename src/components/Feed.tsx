@@ -10,6 +10,7 @@ interface FeedProps {
 		title: string;
 		content: string;
 		created_at: string;
+		userId: string;
 	}
 }
 
