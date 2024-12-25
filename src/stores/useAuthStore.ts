@@ -4,7 +4,7 @@ interface User {
   id: string;
   email: string;
   nickname: string;
-  img_url?: string;
+  img_url: string;
 }
 
 interface AuthState {
