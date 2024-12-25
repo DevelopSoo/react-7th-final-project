@@ -1,9 +1,9 @@
 import { FaCommentDots, FaAngleUp } from "react-icons/fa6";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Comment from "../components/Comment";
 import CommentForm from "../components/CommentForm";
 import { useAuthStore } from "../stores/useAuthStore";
-import { fetchFeedById } from "../api/feedApi";
+import { deleteFeed, fetchFeedById } from "../api/feedApi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUpvotesByFeedId, toggleUpvote } from "../api/upvoteApi";
 import { fetchCommentsWithUserByFeedId } from "../api/commentApi";
@@ -11,6 +11,7 @@ import { fetchCommentsWithUserByFeedId } from "../api/commentApi";
 export default function Detail() {
 	const { id } = useParams();
 	const { user } = useAuthStore();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const { data: feed } = useQuery({
@@ -48,6 +49,27 @@ export default function Detail() {
 
 	const isUpvotedByMe = upvotes?.some((upvote) => upvote.user_id === user?.id);
 
+	const deleteFeedMutation = useMutation({
+		mutationFn: () => {
+			if (!id) throw new Error("id가 없습니다");
+			if (!user?.id) throw new Error("로그인 후 이용 가능합니다.");
+			return deleteFeed({
+				feedId: id,
+				userId: user?.id,
+			})
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["feeds"] });
+			navigate("/");
+		},
+	});
+
+	const handleDeleteFeed = () => {
+		if (window.confirm("정말로 삭제하시겠습니까?")) {
+			deleteFeedMutation.mutate();
+		}
+	}
+
 	return (
 		<div className="flex flex-col gap-6">
 			<div className="flex justify-between items-center">
@@ -60,7 +82,9 @@ export default function Detail() {
 						<Link to={`/feeds/update/${id}`} className="bg-yellow-500 text-white px-4 py-2 rounded-md">
 							수정
 						</Link>
-						<button className="bg-red-500 text-white px-4 py-2 rounded-md">
+						<button
+							onClick={handleDeleteFeed}
+							className="bg-red-500 text-white px-4 py-2 rounded-md">
 							삭제
 						</button>
 					</div>
