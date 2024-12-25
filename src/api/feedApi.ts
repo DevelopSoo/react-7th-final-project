@@ -38,3 +38,25 @@ export const createFeed = async ({
   if (error) throw error;
   return data;
 };
+
+export const editFeed = async ({
+  feedId,
+  userId,
+  title,
+  content,
+}: {
+  feedId: string;
+  userId: string;
+  title: string;
+  content: string;
+}) => {
+  const { error } = await supabase
+    .from("feeds")
+    .update({
+      title,
+      content,
+    })
+    .eq("id", feedId)
+    .eq("userId", userId);
+  if (error) throw error;
+};

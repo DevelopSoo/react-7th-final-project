@@ -55,14 +55,16 @@ export default function Detail() {
 					<span className="text-blue-900 font-bold">{`<`}</span>
 					<span className="text-gray-600">뒤로가기</span>
 				</Link>
-				<div className="flex gap-2.5">
-					<Link to={`/feeds/update/${id}`} className="bg-yellow-500 text-white px-4 py-2 rounded-md">
-						수정
-					</Link>
-					<button className="bg-red-500 text-white px-4 py-2 rounded-md">
-						삭제
-					</button>
-				</div>
+				{user?.id === feed?.userId && (
+					<div className="flex gap-2.5">
+						<Link to={`/feeds/update/${id}`} className="bg-yellow-500 text-white px-4 py-2 rounded-md">
+							수정
+						</Link>
+						<button className="bg-red-500 text-white px-4 py-2 rounded-md">
+							삭제
+						</button>
+					</div>
+				)}
 			</div>
 			<div className="bg-white p-6 flex justify-between rounded-lg">
 				<div>
