@@ -20,7 +20,8 @@ export const fetchCommentsWithUserByFeedId = async (
         user:user_id (
           id,
           email,
-          nickname
+          nickname,
+          img_url
         )
       `
     )

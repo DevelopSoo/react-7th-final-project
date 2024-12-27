@@ -40,7 +40,7 @@ export default function MyPage() {
 		// 기본 업데이트 데이터
 		const updateData = {
 			nickname: nickname,
-			img_url: "" // 기본값으로 빈 문자열 설정
+			img_url: profileImage,
 		};
 
 		try {

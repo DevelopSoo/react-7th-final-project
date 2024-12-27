@@ -8,6 +8,7 @@ type User = {
 	id: string;
 	email: string;
 	nickname: string;
+	img_url: string;
 }
 
 type Comment = {
@@ -82,7 +83,9 @@ export default function Comment({ feedId, comment }: CommentProps) {
 	return (
 		<>
 			<div className="flex gap-2.5">
-				<IoPersonCircleOutline className="w-16 h-16 rounded-full pr-6" />
+				{/* {user?.img_url ? <img src={user?.img_url} alt="profile" className="w-16 h-16 rounded-full pr-6" /> : } */}
+				{comment.user.img_url ? <img src={comment.user.img_url} alt="profile" className="w-12 h-12 rounded-full mr-6" /> : <IoPersonCircleOutline className="w-12 h-12 rounded-full mr-6" />}
+				{/* <IoPersonCircleOutline className="w-16 h-16 rounded-full pr-6" /> */}
 				<div className="flex flex-1 flex-col gap-3">
 					<div className="flex flex-col gap-1">
 						<div className="text-slate-900 font-bold text-sm">

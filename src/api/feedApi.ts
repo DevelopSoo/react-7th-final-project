@@ -5,7 +5,7 @@ type Feed = {
   title: string;
   content: string;
   created_at: string;
-  userId: string;
+  user_id: string;
 };
 
 export const fetchFeeds = async () => {
@@ -33,7 +33,7 @@ export const createFeed = async ({
   const { data, error } = await supabase.from("feeds").insert({
     title,
     content,
-    userId: userId,
+    user_id: userId,
   });
   if (error) throw error;
   return data;
@@ -57,7 +57,7 @@ export const editFeed = async ({
       content,
     })
     .eq("id", feedId)
-    .eq("userId", userId);
+    .eq("user_id", userId);
   if (error) throw error;
 };
 
@@ -72,6 +72,6 @@ export const deleteFeed = async ({
     .from("feeds")
     .delete()
     .eq("id", feedId)
-    .eq("userId", userId);
+    .eq("user_id", userId);
   if (error) throw error;
 };

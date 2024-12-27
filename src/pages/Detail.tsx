@@ -77,7 +77,7 @@ export default function Detail() {
 					<span className="text-blue-900 font-bold">{`<`}</span>
 					<span className="text-gray-600">뒤로가기</span>
 				</Link>
-				{user?.id === feed?.userId && (
+				{user?.id === feed?.user_id && (
 					<div className="flex gap-2.5">
 						<Link to={`/feeds/update/${id}`} className="bg-yellow-500 text-white px-4 py-2 rounded-md">
 							수정
