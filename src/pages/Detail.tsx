@@ -99,7 +99,7 @@ export default function Detail() {
 								return;
 							}
 
-							if (user?.id === feed?.userId) {
+							if (user?.id === feed?.user_id) {
 								alert("본인이 작성한 글은 추천할 수 없습니다.");
 								return;
 							}
