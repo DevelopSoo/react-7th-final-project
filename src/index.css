@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  /* @apply: 일반 css 파일에서 tailwind 적용하는 법 */
+  @apply bg-gray-100;
+}
